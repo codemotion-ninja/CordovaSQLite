@@ -39,6 +39,37 @@ var cordovaSQLite =
 	    );
     },
 
+
+    /**
+    * FORKED 
+    * making response same with cordova storage
+    *  
+    * Executes a query and return a 2D javascript array. Rows are records and columns are data cols.
+    * Note: numbers are returned as strings in the array and have to eval()-ed before using.
+    * @param sql: SQL string.
+    * @param params: An array of parameters.
+    * @param successCallback The callback which will be called when the query is executed successfully.
+    * @param failureCallback The callback which will be called when the query can't be executed.
+    */
+   executeSql: function (sql, params, successCallback, errorCallback)
+   {
+       cordova.exec(
+           function (result)
+           {
+               // We get a 2D array as a string. Convert it to a 2D array of strings.
+               var resultArray = eval(result);
+               
+               successCallback({rows:resultArray});
+           },    // Success callback from the plugin
+           errorCallback,      // Error callback from the plugin
+           'CordovaSQLite',   	// Tell cordova to run "CordovaSQLite" Plugin
+           'execQueryArrayResult', 		// Tell plugin, which action we want to perform
+           [sql, params] 	        // Passing list of args to the plugin
+       );
+   },
+
+
+
     /**
     * Executes a query and return a 2D javascript array. Rows are records and columns are data cols.
     * Note: numbers are returned as strings in the array and have to eval()-ed before using.
